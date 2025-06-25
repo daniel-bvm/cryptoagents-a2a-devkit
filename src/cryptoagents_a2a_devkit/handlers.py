@@ -1,6 +1,9 @@
 from typing import TypedDict, Optional
 import httpx
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 class AgentDetail(TypedDict):
     agent_id: str
@@ -39,7 +42,8 @@ async def get_agent_detail(
                 f"{backend_base_url}/vibe-agent/{agent_id}",
                 headers={"Authorization": f"Bearer {authorization_token}"}
             )
-        except httpx.HTTPStatusError:
+        except Exception as e:
+            logger.error(f"Error getting agent detail: {e}")
             return None
 
         if response.status_code == 200:
