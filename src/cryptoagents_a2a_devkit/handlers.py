@@ -18,7 +18,7 @@ def get_router_port() -> int:
         return int(os.getenv("ROUTER_HOST_PORT") or "12321")
     except ValueError:
         return 0
-    
+
 ROUTER_PORT = get_router_port()
 SERVER_MODE = ROUTER_PORT > 0
 
@@ -44,10 +44,14 @@ async def get_agent_detail(
 
         if response.status_code == 200:
             data: dict = response.json()
-            meta_data: dict = data["meta_data"]
+            meta_data: dict = data.get("meta_data", {})
 
-            container: str = data["container_name"] or data["container_id"]
-            port: int = data["port"] or 80
+            container: str = data.get("container_name", data.get("container_id", ""))
+
+            if not container:
+                return None
+            
+            port: int = data.get("port", 80)
 
             base_url = (
                 f"{backend_base_url}/agent-router/prompt?url=http://localhost:{ROUTER_PORT}/{container}"
