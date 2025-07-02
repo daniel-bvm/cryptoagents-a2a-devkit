@@ -66,7 +66,7 @@ async def get_agent_detail(
             return AgentDetail(
                 agent_id=agent_id,
                 description=data.get("description", ""),
-                agent_name=data.get("name", str(agent_id)),
+                agent_name=meta_data.get("display_name", str(agent_id)),
                 base_url=base_url,
                 status=data.get("status", "unknown"),
                 avatar_url=meta_data.get("nft_token_image", None),
